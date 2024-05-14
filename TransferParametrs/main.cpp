@@ -4,7 +4,7 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-void Exchange(int a, int b);
+void Exchange(int& a, int& b);
 #define tab "\t"
 
 void main()
@@ -17,7 +17,7 @@ void main()
 	cout << a << tab << b << endl;
 }
 
-void Exchange(int a, int b)
+void Exchange(int& a, int& b)
 {
 	cout << &a << tab << &b << endl;
 	int buffer = a;
