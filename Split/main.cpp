@@ -7,23 +7,38 @@ using std::endl;
 
 void Fill_Rand(int arr[], const int SIZE);
 void Print(int arr[], const int SIZE);
-void even(int arr[], const int SIZE);
-void odd(int arr[], const int SIZE);
+
 #define tab "\t"
 
 void main()
 {
 	setlocale(LC_ALL, "");
-	int SIZE = 10;
-	int* arr = new int [SIZE];
-	int* err = new int[SIZE];
-	int* orr = new int[SIZE];
+	const int SIZE = 10;
+	int arr[SIZE];
+	int count_even = 0;
+	int count_odd = 0;
 	Fill_Rand(arr, SIZE);
 	Print(arr, SIZE);
-	cout << "Четные числа: "; even(arr, SIZE);
-	cout << "Нёчетные числа: "; odd(arr, SIZE);
-	delete[] err, arr, odd;
+	for (int i = 0; i < SIZE; i++)
+	{
+		arr[i] % 2 == 0 ? count_even++ : count_odd++;
+	}
+	cout << "Количество четных элементов массива: " << count_even << endl;
+	cout << "Количество нечетных элементов массива: " << count_odd << endl;
+	int* err = new int[count_even];
+	int* orr = new int[count_odd];
+	for (int i = 0, j = 0, k = 0; i < SIZE; i++)
+	{
+		//arr[i] % 2 == 0 ? err[j++] = arr[i] : orr[k++] = arr[i];
+		(arr[i] % 2 == 0 ? err[j++] : orr[k++]) = arr[i];
+	}
+	Print(err, count_even);
+	Print(orr, count_odd);
+
+	delete[] orr;
+	delete[] err;
 }
+
 void Fill_Rand(int arr[], const int SIZE)
 {
 	for (int i = 0; i < SIZE; i++)
@@ -36,36 +51,6 @@ void Print(int arr[], const int SIZE)
 	for (int i = 0; i < SIZE; i++)
 	{
 		cout << arr[i] << tab;
-	}
-	cout << endl;
-}
-void even(int arr[], const int SIZE)
-{
-	int count_even = 0;
-	for (int i = 0; i < SIZE; i++)
-	{
-		if (arr[i] % 2 == 0)
-		{
-			count_even++;
-			int* err = new int[count_even];
-			err[count_even] = arr[i];
-			cout << err[count_even] << tab;
-		}
-	}
-	cout << endl;
-}
-void odd(int arr[], const int SIZE)
-{
-	int count_odd = 0;
-	for (int i = 0; i < SIZE; i++)
-	{
-		if (arr[i] % 2 != 0)
-		{
-			count_odd++;
-			int* orr = new int[count_odd];
-			orr[count_odd] = arr[i];
-			cout << orr[count_odd] << tab;
-		}
 	}
 	cout << endl;
 }
