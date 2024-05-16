@@ -7,6 +7,12 @@ using std::endl;
 #define tab "\t"
 void FillRand(int arr[], const int n);
 void Print(int arr[], const int n);
+int* Push_Back(int arr[], int& n, int value);
+
+
+
+
+
 
 void main()
 {
@@ -17,7 +23,10 @@ void main()
 	FillRand(arr, n);
 	Print(arr, n);
 
-
+	int value;
+	cout << "¬ведите добавл€емое значени: "; cin >> value;
+	arr = Push_Back(arr, n, value);
+	Print(arr, n);
 	delete[] arr;
 }
 
@@ -36,3 +45,18 @@ void Print(int arr[], const int n)
 	}
 	cout << endl;
 }
+int* Push_Back(int arr[], int& n, int value)
+{
+	int* buff_arr = new int[n + 1];
+	for (int i = 0; i < n; i++)
+	{
+		buff_arr[i] = arr[i];
+	}
+	delete[] arr;
+	arr = buff_arr;
+	arr[n] = value;
+	n++;
+	return arr;
+}
+
+
