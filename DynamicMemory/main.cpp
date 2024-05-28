@@ -100,15 +100,18 @@ void main()
 	Print(arr, rows, cols);
 
 	arr = Push_Row_Back(arr, rows, cols);
+	FillRand(arr[rows - 1], cols, 0, 100);
 	cout << "Строка добавлена в конец массива: " << endl;
 	Print(arr, rows, cols);
 
 	arr = Push_Row_Front(arr, rows, cols);
+	FillRand(arr[0], cols, 0, 100);
 	cout << "Строка добавлена в начало массива: " << endl;
 	Print(arr, rows, cols);
 
 	cout << "Введите индекс добавляемой строки: "; cin >> index;
 	arr = Insert_Row(arr, rows, cols, index);
+	if (index < rows)FillRand(arr[index], cols, 0, 100);
 	cout << "Строка добавлена по индексу " << index << " в массив: " << endl;
 	Print(arr, rows, cols);
 
@@ -172,6 +175,7 @@ template<typename T>void Clear(T** arr, const int rows)
 	}
 	delete[] arr;
 }
+
 void FillRand(int arr[], const int n, int minRand, int maxRand)
 {
 	for (int i = 0; i < n; i++)
@@ -196,39 +200,29 @@ void FillRand(char arr[], const int n, int minRand, int maxRand)
 		*(arr + i) = rand();
 	}
 }
+
 void FillRand(int** arr, const int rows, const int cols, int minRand, int maxRand)
 {
 	for (int i = 0; i < rows; i++)
 	{
-		for (int j = 0; j < cols; j++)
-		{
-			arr[i][j] = rand() % (maxRand - minRand) + minRand;
-		}
+		FillRand(arr[i], cols, minRand, maxRand);
 	}
 }
 void FillRand(double** arr, const int rows, const int cols, int minRand, int maxRand)
 {
-	minRand *= 100;
-	maxRand *= 100;
 	for (int i = 0; i < rows; i++)
 	{
-		for (int j = 0; j < cols; j++)
-		{
-			arr[i][j] = rand() % (maxRand - minRand) + minRand;
-			arr[i][j] /= 100;
-		}
+		FillRand(arr[i], cols, minRand, maxRand);
 	}
 }
 void FillRand(char** arr, const int rows, const int cols, int minRand, int maxRand)
 {
 	for (int i = 0; i < rows; i++)
 	{
-		for (int j = 0; j < cols; j++)
-		{
-			arr[i][j] = rand() % (maxRand - minRand) + minRand;
-		}
+		FillRand(arr[i], cols);
 	}
 }
+
 template<typename T>void Print(T arr[], const int n)
 {
 	for (int i = 0; i < n; i++)
@@ -263,31 +257,18 @@ template <typename T>T* Push_Back(T arr[], int& n, const T value)
 }
 template<typename T>T** Push_Row_Back(T** arr, int& rows, const int cols)
 {
-	T** buff_arr = new T* [rows + 1];
-	for (int i = 0; i < rows; i++)
-	{
-		buff_arr[i] = arr[i];
-	}
-	delete[] arr;
-	buff_arr[rows] = new T[cols] {};
-	rows++;
-	return buff_arr;
+	return Push_Back(arr, rows, new T[cols]{ });
 }
 template<typename T>void Push_Col_Back(T** arr, const int rows, int& cols)
 {
 	for (int i = 0; i < rows; i++)
 	{
-		T* buff_arr = new T[cols + 1];
-		for (int j = 0; j < cols; j++)
-		{
-		buff_arr[j] = arr[i][j];
-		}
-		delete[] arr[i];
-		arr[i] = buff_arr;
-		arr[i][cols] = {};
+		arr[i] = Push_Back(arr[i], cols, T());
+		cols--;
 	}
 	cols++;
 }
+
 template<typename T>T* Push_Front(T arr[], int& n, T value)
 {
 	T* buff_arr = new T[n + 1];
@@ -302,30 +283,18 @@ template<typename T>T* Push_Front(T arr[], int& n, T value)
 }
 template<typename T>T** Push_Row_Front(T** arr, int& rows, const int cols)
 {
-	T** buff_arr = new T* [rows + 1];
-	for (int i = 0; i < rows; i++)
-	{
-		buff_arr[i + 1] = arr[i];
-	}
-	delete[] arr;
-	buff_arr[0] = new T[cols] {};
-	rows++;
-	return buff_arr;
+	return Push_Front(arr, rows, new T[cols]{});
 }
 template<typename T>void Push_Col_Front(T** arr, const int rows, int& cols)
 {
 	for (int i = 0; i < rows; i++)
 	{
-	T* buff_arr = new T [cols + 1];
-		for (int j = 0; j < cols; j++) {
-			buff_arr[j + 1] = arr[i][j];
-		}
-		delete[] arr[i];
-		arr[i] = buff_arr;
-		arr[i][0] = {  };
+		arr[i] = Push_Front(arr[i], cols, T());
+		cols--;
 	}
 	cols++;
 }
+
 template<typename T>T* Insert(T arr[], int& n, T value, int index)
 {
 	T* buff_arr = new T[n + 1];
@@ -351,33 +320,19 @@ template<typename T>T* Insert(T arr[], int& n, T value, int index)
 template<typename T>T** Insert_Row(T** arr, int& rows, const int cols, int index)
 {
 	if (index >= rows)return arr;
-	T** buff_arr = new T* [rows + 1];
-	for (int i = 0; i < rows; i++)
-	{
-		buff_arr[i < index ? i : i + 1] = arr[i];
-	}
-	delete[] arr;
-	arr = buff_arr;
-	arr[index] = new T[cols] {};
-	rows++;
-	return arr;
+	return Insert(arr, rows, new T[cols]{}, index);
 }
 template<typename T>void Insert_Col(T** arr, const int rows, int& cols, int index)
 {
 	if (index >= cols) return;
 	for (int i = 0; i < rows; i++)
 	{
-		T* buff_arr = new T[cols + 1];
-		for (int j = 0; j < cols; j++)
-		{
-			buff_arr[j < index ? j : j + 1] = arr[i][j];
-		}
-		delete[] arr[i];
-		arr[i] = buff_arr;
-		arr[i][index] = {};
+		arr[i] = Insert(arr[i], cols, T(), index);
+		cols--;
 	}
 	cols++;
 }
+
 template<typename T>T* Erase(T arr[], int& n, int index)
 {
 	T* buff_arr = new T[--n];
@@ -390,14 +345,8 @@ template<typename T>T* Erase(T arr[], int& n, int index)
 }
 template<typename T>T** Erase_Row(T** arr, int& rows, const int cols, int index)
 {
-	T** buff_arr = new T*[--rows];
-	for (int i = 0; i < rows; i++)
-	{
-		buff_arr[i] = arr[i < index ? i : i + 1];
-	}
 	delete[] arr[index];
-	delete[] arr;
-	return buff_arr;
+	return Erase(arr, rows, index);
 }
 template<typename T>void Erase_Col(T** arr, const int rows, int& cols, int index)
 {
@@ -413,6 +362,7 @@ template<typename T>void Erase_Col(T** arr, const int rows, int& cols, int index
 	}
 	cols--;
 }
+
 template<typename T>T* Pop_Back(T arr[], int& n)
 {
 	T* buff_arr = new T[--n];
@@ -425,14 +375,8 @@ template<typename T>T* Pop_Back(T arr[], int& n)
 }
 template<typename T>T** Pop_Row_Back(T** arr, int& rows, const int cols)
 {
-	T** buff_arr = new T* [--rows];
-	for (int i = 0; i < rows; i++)
-	{
-		buff_arr[i] = arr[i];
-	}
-	delete[] arr[rows];
-	delete[] arr;
-	return buff_arr;
+	delete[] arr[rows - 1];
+	return Pop_Back(arr, rows);
 }
 template<typename T>void Pop_Col_Back(T** arr, const int rows, int& cols)
 {
@@ -448,8 +392,8 @@ template<typename T>void Pop_Col_Back(T** arr, const int rows, int& cols)
 	}
 	cols--;
 }
-template<typename T>
-T* Pop_Front(T arr[], int& n)
+
+template<typename T>T* Pop_Front(T arr[], int& n)
 {
 	T* buff_arr = new T[--n];
 	for (int i = 0; i < n; i++)
@@ -461,14 +405,8 @@ T* Pop_Front(T arr[], int& n)
 }
 template<typename T>T** Pop_Row_Front(T** arr, int& rows, const int cols)
 {
-	T** buff_arr = new T* [--rows];
-	for (int i = 0; i < rows; i++)
-	{
-		buff_arr[i] = arr[i + 1];
-	}
 	delete[] arr[0];
-	delete[] arr;
-	return buff_arr;
+	return Pop_Front(arr, rows);
 }
 template<typename T>void Pop_Col_Front(T** arr, const int rows, int& cols)
 {
