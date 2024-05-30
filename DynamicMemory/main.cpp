@@ -141,11 +141,11 @@ void main()
 	cout << "Столбец добавлен по индексу " << index << " в массив: " << endl;
 	Print(arr, rows, cols);
 	
-	cout << "Столбец удален из начала массива: " << endl;
+	cout << "Столбец удален из конца массива: " << endl;
 	Pop_Col_Back(arr, rows, cols);
 	Print(arr, rows, cols);
 
-	cout << "Столбец удален из конца массива: " << endl;
+	cout << "Столбец удален из начала массива: " << endl;
 	Pop_Col_Front(arr, rows, cols);
 	Print(arr, rows, cols);
 	
@@ -352,13 +352,8 @@ template<typename T>void Erase_Col(T** arr, const int rows, int& cols, int index
 {
 	for (int i = 0; i < rows; i++)
 	{
-		T* buff_arr = new T [cols - 1];
-		for (int j = 0; j < cols - 1; j++)
-		{
-			buff_arr[j] = arr[i][j < index ? j : j + 1];
-		}
-		delete[] arr[i];
-		arr[i] = buff_arr;
+		arr[i] = Erase(arr[i], cols, index);
+		cols++;
 	}
 	cols--;
 }
@@ -382,13 +377,8 @@ template<typename T>void Pop_Col_Back(T** arr, const int rows, int& cols)
 {
 	for (int i = 0; i < rows; i++)
 	{
-		T* buff_arr = new T[cols];
-		for (int j = 0; j < cols; j++)
-		{
-			buff_arr[j] = arr[i][j];
-		}
-		delete[] arr[i];
-		arr[i] = buff_arr;
+		arr[i] = Pop_Back(arr[i], cols);
+		cols++;
 	}
 	cols--;
 }
@@ -412,13 +402,8 @@ template<typename T>void Pop_Col_Front(T** arr, const int rows, int& cols)
 {
 	for (int i = 0; i < rows; i++)
 	{
-		T* buff_arr = new T[cols];
-		for (int j = 0; j < cols; j++)
-		{
-			buff_arr[j] = arr[i][j + 1];
-		}
-		delete[] arr[i];
-		arr[i] = buff_arr;
+		arr[i] = Pop_Front(arr[i], cols);
+		cols++;
 	}
 	cols--;
 }
